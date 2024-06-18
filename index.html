@@ -9,21 +9,6 @@
     <p id="message">Processing...</p>
 
     <script>
-        // Fetch the authorization URL from the backend
-        fetch(`http://localhost:8000/slack_auth`)
-            .then(response => response.json())
-            .then(data => {
-                const authorizationUrl = data.authorization_url;
-                console.log('Authorization URL:', authorizationUrl);
-                // Redirect the user to Slack's authorization page
-                window.location.href = authorizationUrl;
-            })
-            .catch((error) => {
-                document.getElementById('message').innerText = 'Failed to start authorization.';
-                console.error('Error:', error);
-            });
-
-        // Handle the callback from Slack
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
         const state = params.get('state');
