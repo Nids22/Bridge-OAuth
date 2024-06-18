@@ -7,51 +7,25 @@
 <body>
     <h1>Slack OAuth Redirect</h1>
     <p id="message">Processing...</p>
-    <button id="authButton">Start Slack Authorization</button>
-    <button id="callbackButton">Trigger Slack Callback</button>
 
     <script>
-        document.getElementById('authButton').addEventListener('click', () => {
-            fetch('http://localhost:8000/slack_auth')
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Authorization URL:', data.authorization_url);
-                    window.location.href = data.authorization_url;
-                })
-                .catch((error) => {
-                    document.getElementById('message').innerText = 'Failed to start authorization.';
-                    console.error('Error:', error);
-                });
-        });
-
-        document.getElementById('callbackButton').addEventListener('click', () => {
-            const params = new URLSearchParams(window.location.search);
-            const code = params.get('code');
-            const state = params.get('state');
-
-            if (code && state) {
-                fetch(`http://localhost:8000/slack_callback?code=${code}&state=${state}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
-                        console.log('Success:', data);
-                    })
-                    .catch((error) => {
-                        document.getElementById('message').innerText = 'Authorization failed. Please try again.';
-                        console.error('Error:', error);
-                    });
-            } else {
-                document.getElementById('message').innerText = 'Authorization failed. No code or state provided.';
-            }
-        });
-
-        // Automatically trigger callback if code and state are in the URL
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
         const state = params.get('state');
 
         if (code && state) {
-            document.getElementById('callbackButton').click();
+            fetch(`http://localhost:8000/slack_auth?code=${code}&state=${state}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    document.getElementById('message').innerText = 'Authorization failed. Please try again.';
+                    console.error('Error:', error);
+                });
+        } else {
+            document.getElementById('message').innerText = 'Authorization failed. No code or state provided.';
         }
     </script>
 </body>
