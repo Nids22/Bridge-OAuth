@@ -14,7 +14,10 @@
         const state = params.get('state');
 
         if (code && state) {
-            fetch(`http://localhost:8000/slack_callback?code=${code}&state=${state}`)
+            fetch(`http://localhost:8000/slack_callback?code=${code}&state=${state}`, {
+                method: 'GET',
+                credentials: 'include'  // Include credentials (cookies) in the request
+            })
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
