@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Slack OAuth</title>
+    <script>
+        function startOAuth() {
+            const clientId = 'your-slack-client-id';
+            const redirectUri = 'https://your-github-username.github.io/your-repo-name/';
+            const state = Math.random().toString(36).substring(2); // random state value
+            sessionStorage.setItem('oauth_state', state);
+            const authUrl = `https://slack.com/oauth/v2/authorize?client_id=${clientId}&scope=channels:read,channels:history,files:read,users:read&redirect_uri=${redirectUri}&state=${state}`;
+            window.location.href = authUrl;
+        }
+
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const storedState = sessionStorage.getItem('oauth_state');
+
+            if (code && state === storedState) {
+                // Send the code to your backend server
+                fetch('https://your-backend-url/slackcallback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code, state })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Handle successful response from the backend
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Handle error response from the backend
+                });
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Slack OAuth</h1>
+    <button onclick="startOAuth()">Authorize with Slack</button>
+</body>
+</html>
