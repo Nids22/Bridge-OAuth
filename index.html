@@ -14,7 +14,7 @@
         const state = params.get('state');
 
         if (code && state) {
-            fetch(`http://localhost:8000/slack_callback?code=${code}&state=${state}`)
+            fetch(`http://20.84.111.219:8000/slack_callback?code=${code}&state=${state}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
