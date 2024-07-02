@@ -1,37 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Slack OAuth</title>
-</head>
-<body>
-    <h1>Slack OAuth Redirect</h1>
-    <p id="message">Processing...</p>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
-        const state = params.get('state');
-
-        if (code && state) {
-            fetch(`http://20.84.111.219:8000/slack_callback?code=${code}&state=${state}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
-                    console.log('Success:', data);
-                })
-                .catch((error) => {
-                    document.getElementById('message').innerText = 'Authorization failed. Please try again.';
-                    console.error('Error:', error);
-                });
-        } else {
-            document.getElementById('message').innerText = 'Authorization failed. No code or state provided.';
-        }
-    </script>
-</body>
-</html>
+    if (code && state) {
+        fetch(`https://20.84.111.219/slack_callback?code=${code}&state=${state}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                document.getElementById('message').innerText = 'Authorization failed. Please try again.';
+                console.error('Error:', error);
+            });
+    } else {
+        document.getElementById('message').innerText = 'Authorization failed. No code or state provided.';
+    }
+</script>
