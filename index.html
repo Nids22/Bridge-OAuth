@@ -14,7 +14,7 @@
         const state = params.get('state');
 
         if (code && state) {
-            fetch(`https://bridge-arvo.ddns.net/slack_callback?code=${code}&state=${state}`)
+            fetch(`https://bridge-arvo.ddns.net/api/slack_callback?code=${code}&state=${state}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -22,7 +22,11 @@
                     return response.json();
                 })
                 .then(data => {
-                    document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
+                    if (data.success) {
+                        document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
+                    } else {
+                        document.getElementById('message').innerText = 'Authorization failed. Please try again.';
+                    }
                     console.log('Success:', data);
                 })
                 .catch((error) => {
