@@ -17,7 +17,7 @@
             fetch(`http://localhost:8000/api/slack_callback?code=${code}&state=${state}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'success') {
+                    if (data.status === "success") {
                         document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
                     } else {
                         document.getElementById('message').innerText = 'Authorization failed. Please try again.';
