@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Slack OAuth</title>
+</head>
+<body>
+    <h1>Slack OAuth Redirect</h1>
+    <p id="message">Processing...</p>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        const state = params.get('state');
+
+        if (code && state) {
+            fetch(`https://arvoai.ddns.net/api/slack_callback?code=${code}&state=${state}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        document.getElementById('message').innerText = 'Authorization successful. You can close this window.';
+                    } else {
+                        document.getElementById('message').innerText = 'Authorization failed. Please try again.';
+                    }
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    document.getElementById('message').innerText = 'Authorization failed. Please try again.';
+                    console.error('Error:', error);
+                });
+        } else {
+            document.getElementById('message').innerText = 'Authorization failed. No code or state provided.';
+        }
+    </script>
+</body>
+</html>
